@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>INK & EMBER — Tattoo Artist</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Jost:wght@200;300;400;500&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --cream: #F5F0E8; --off-white: #FAF7F2; --warm-white: #FFFDF9;
+  --sage: #8BA888; --sage-light: #B4C9B1; --sage-pale: #D6E4D4;
+  --forest: #4A6741; --deep-forest: #2E4229; --moss: #6B8A5E;
+  --charcoal: #2C2C2A; --text-muted: #7A7A72; --border: rgba(74,103,65,0.15);
+}
+html { scroll-behavior: smooth; }
+body { font-family: 'Jost', sans-serif; background: var(--off-white); color: var(--charcoal); overflow-x: hidden; }
+
+/* NAV */
+nav { position: fixed; top: 0; left: 0; right: 0; z-index: 200; display: flex; justify-content: space-between; align-items: center; padding: 1.4rem 3rem; background: rgba(250,247,242,0.93); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); }
+.nav-logo { font-family: 'Cormorant Garamond', serif; font-size: 1.5rem; font-weight: 600; letter-spacing: 0.12em; color: var(--deep-forest); text-decoration: none; }
+.nav-links { display: flex; gap: 2.5rem; list-style: none; }
+.nav-links a { font-size: 0.78rem; font-weight: 300; letter-spacing: 0.18em; text-transform: uppercase; color: var(--charcoal); text-decoration: none; transition: color 0.2s; }
+.nav-links a:hover { color: var(--forest); }
+.nav-right { display: flex; align-items: center; gap: 0.6rem; }
+.nav-book { font-size: 0.75rem; font-weight: 400; letter-spacing: 0.15em; text-transform: uppercase; color: var(--warm-white); background: var(--forest); padding: 0.6rem 1.4rem; text-decoration: none; transition: background 0.2s; }
+.nav-book:hover { background: var(--deep-forest); }
+.nav-admin { font-size: 0.62rem; font-weight: 300; letter-spacing: 0.15em; text-transform: uppercase; color: var(--text-muted); padding: 0.45rem 0.8rem; border: 1px solid var(--border); text-decoration: none; transition: all 0.2s; }
+.nav-admin:hover { color: var(--forest); border-color: var(--forest); }
+
+/* HERO */
+#home { min-height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 8rem 2rem 4rem; background: var(--warm-white); position: relative; overflow: hidden; }
+.hero-bg { position: absolute; inset: 0; background: radial-gradient(ellipse 60% 50% at 20% 80%, rgba(139,168,136,0.12) 0%, transparent 60%), radial-gradient(ellipse 50% 60% at 80% 20%, rgba(180,201,177,0.10) 0%, transparent 60%); }
+.hero-eyebrow { font-size: 0.72rem; font-weight: 300; letter-spacing: 0.3em; text-transform: uppercase; color: var(--moss); margin-bottom: 1.5rem; position: relative; }
+.hero-name { font-family: 'Cormorant Garamond', serif; font-size: clamp(4rem,10vw,8rem); font-weight: 300; line-height: 0.9; color: var(--deep-forest); position: relative; margin-bottom: 0.3rem; }
+.hero-name em { font-style: italic; color: var(--forest); }
+.hero-tagline { font-family: 'Cormorant Garamond', serif; font-size: clamp(1rem,2.5vw,1.4rem); font-weight: 300; font-style: italic; color: var(--text-muted); margin-top: 1.2rem; margin-bottom: 3rem; position: relative; }
+.hero-actions { display: flex; gap: 1rem; flex-wrap: wrap; justify-content: center; position: relative; }
+.btn-primary { font-size: 0.75rem; font-weight: 400; letter-spacing: 0.18em; text-transform: uppercase; color: var(--warm-white); background: var(--forest); padding: 1rem 2.4rem; text-decoration: none; transition: background 0.2s; display: inline-block; }
+.btn-primary:hover { background: var(--deep-forest); }
+.btn-ghost { font-size: 0.75rem; font-weight: 400; letter-spacing: 0.18em; text-transform: uppercase; color: var(--forest); border: 1px solid var(--forest); padding: 1rem 2.4rem; transition: all 0.2s; display: inline-block; text-decoration: none; }
+.btn-ghost:hover { background: var(--forest); color: var(--warm-white); }
+.scroll-hint { position: absolute; bottom: 2rem; left: 50%; transform: translateX(-50%); display: flex; flex-direction: column; align-items: center; gap: 0.5rem; opacity: 0.45; }
+.scroll-hint span { font-size: 0.65rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--moss); }
+.scroll-line { width: 1px; height: 40px; background: var(--moss); animation: scrollPulse 2s ease-in-out infinite; }
+@keyframes scrollPulse { 0%,100%{opacity:0.2;transform:scaleY(0.5);transform-origin:top}50%{opacity:1;transform:scaleY(1);transform-origin:top} }
+
+/* ABOUT */
+#about { padding: 8rem 3rem; background: var(--deep-forest); display: grid; grid-template-columns: 1fr 1fr; gap: 6rem; align-items: center; }
+.about-img-placeholder { width: 100%; aspect-ratio: 3/4; background: rgba(139,168,136,0.2); display: flex; align-items: center; justify-content: center; font-family: 'Cormorant Garamond', serif; font-style: italic; color: rgba(214,228,212,0.5); position: relative; }
+.about-img-wrap { position: relative; }
+.about-img-accent { position: absolute; bottom: -20px; right: -20px; width: 80%; height: 80%; border: 1px solid rgba(139,168,136,0.3); z-index: -1; }
+.about-label { font-size: 0.68rem; font-weight: 300; letter-spacing: 0.3em; text-transform: uppercase; color: var(--sage); margin-bottom: 1.2rem; }
+.about-title { font-family: 'Cormorant Garamond', serif; font-size: clamp(2.2rem,4vw,3rem); font-weight: 300; color: var(--sage-pale); line-height: 1.15; margin-bottom: 1.5rem; }
+.about-title em { font-style: italic; color: var(--sage-light); }
+.about-body { font-size: 0.9rem; font-weight: 300; line-height: 1.9; color: rgba(214,228,212,0.75); margin-bottom: 1.2rem; }
+.about-stats { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1.5rem; margin-top: 2.5rem; padding-top: 2rem; border-top: 1px solid rgba(139,168,136,0.2); }
+.stat-num { font-family: 'Cormorant Garamond', serif; font-size: 2.2rem; font-weight: 300; color: var(--sage-light); }
+.stat-label { font-size: 0.68rem; font-weight: 300; letter-spacing: 0.15em; text-transform: uppercase; color: rgba(139,168,136,0.6); margin-top: 0.3rem; }
+
+/* STYLES */
+#styles { padding: 8rem 3rem; background: var(--warm-white); }
+.section-header { text-align: center; padding: 0 2rem 4rem; }
+.section-label { font-size: 0.68rem; font-weight: 300; letter-spacing: 0.3em; text-transform: uppercase; color: var(--moss); margin-bottom: 0.8rem; }
+.section-title { font-family: 'Cormorant Garamond', serif; font-size: clamp(2rem,5vw,3.5rem); font-weight: 300; color: var(--deep-forest); line-height: 1.1; }
+.styles-grid { display: grid; grid-template-columns: repeat(auto-fit,minmax(220px,1fr)); gap: 1.5px; margin-top: 4rem; background: var(--border); }
+.style-card { background: var(--cream); padding: 2.5rem 2rem; transition: background 0.3s; }
+.style-card:hover { background: var(--sage-pale); }
+.style-icon { font-family: 'Cormorant Garamond', serif; font-size: 2.5rem; font-weight: 300; color: var(--forest); margin-bottom: 1rem; }
+.style-name { font-family: 'Cormorant Garamond', serif; font-size: 1.4rem; font-weight: 400; color: var(--deep-forest); margin-bottom: 0.6rem; }
+.style-desc { font-size: 0.8rem; font-weight: 300; line-height: 1.7; color: var(--text-muted); }
+
+/* FAQ */
+#faq { padding: 8rem 3rem; background: var(--off-white); }
+.faq-inner { max-width: 800px; margin: 0 auto; }
+.faq-item { border-bottom: 1px solid var(--border); }
+.faq-q { width: 100%; text-align: left; background: none; border: none; cursor: pointer; padding: 1.5rem 0; display: flex; justify-content: space-between; align-items: center; font-family: 'Jost', sans-serif; font-size: 0.95rem; font-weight: 400; color: var(--charcoal); transition: color 0.2s; }
+.faq-q:hover { color: var(--forest); }
+.faq-icon { width: 20px; height: 20px; position: relative; flex-shrink: 0; margin-left: 1rem; }
+.faq-icon::before,.faq-icon::after { content: ''; position: absolute; background: var(--forest); transition: transform 0.3s,opacity 0.3s; }
+.faq-icon::before { width: 100%; height: 1px; top: 50%; left: 0; transform: translateY(-50%); }
+.faq-icon::after { width: 1px; height: 100%; left: 50%; top: 0; transform: translateX(-50%); }
+.faq-item.open .faq-icon::after { opacity: 0; }
+.faq-a { font-size: 0.85rem; font-weight: 300; line-height: 1.8; color: var(--text-muted); max-height: 0; overflow: hidden; transition: max-height 0.4s ease,padding 0.3s; }
+.faq-item.open .faq-a { max-height: 300px; padding-bottom: 1.5rem; }
+
+/* AFTERCARE */
+#care { padding: 8rem 3rem; background: var(--warm-white); }
+.care-inner { max-width: 800px; margin: 0 auto; }
+.care-intro { font-size: 0.85rem; font-weight: 300; line-height: 1.8; color: var(--text-muted); margin-top: 1rem; }
+.care-section { margin-bottom: 3rem; }
+.care-phase { font-size: 0.65rem; font-weight: 400; letter-spacing: 0.25em; text-transform: uppercase; color: var(--moss); margin-bottom: 0.5rem; }
+.care-title { font-family: 'Cormorant Garamond', serif; font-size: 1.4rem; font-weight: 400; color: var(--deep-forest); margin-bottom: 1rem; }
+.care-list { list-style: none; display: flex; flex-direction: column; gap: 0.6rem; }
+.care-list li { font-size: 0.85rem; font-weight: 300; line-height: 1.7; color: var(--charcoal); padding-left: 1.2rem; position: relative; }
+.care-list li::before { content: ''; position: absolute; left: 0; top: 0.65rem; width: 5px; height: 1px; background: var(--forest); }
+.care-alert { background: var(--sage-pale); padding: 2rem; margin-top: 2rem; }
+.care-alert-title { font-family: 'Cormorant Garamond', serif; font-size: 1.1rem; color: var(--deep-forest); margin-bottom: 0.5rem; }
+.care-alert p { font-size: 0.82rem; font-weight: 300; line-height: 1.7; color: var(--charcoal); }
+.care-alert strong { font-weight: 400; color: var(--forest); }
+
+/* FOOTER */
+footer { background: var(--deep-forest); padding: 4rem 3rem 2rem; display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 3rem; }
+.footer-brand { font-family: 'Cormorant Garamond', serif; font-size: 1.8rem; font-weight: 300; color: var(--sage-pale); margin-bottom: 0.8rem; }
+.footer-tagline { font-size: 0.78rem; font-weight: 300; color: rgba(139,168,136,0.6); line-height: 1.7; max-width: 260px; }
+.footer-col-title { font-size: 0.65rem; font-weight: 400; letter-spacing: 0.25em; text-transform: uppercase; color: var(--sage); margin-bottom: 1.2rem; }
+.footer-col-links { list-style: none; display: flex; flex-direction: column; gap: 0.7rem; }
+.footer-col-links a { font-size: 0.82rem; font-weight: 300; color: rgba(214,228,212,0.6); text-decoration: none; transition: color 0.2s; }
+.footer-col-links a:hover { color: var(--sage-light); }
+.footer-bottom { background: var(--deep-forest); padding: 1.5rem 3rem; border-top: 1px solid rgba(139,168,136,0.15); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.5rem; }
+.footer-copy { font-size: 0.72rem; font-weight: 300; color: rgba(139,168,136,0.4); }
+.footer-social { display: flex; gap: 1.5rem; }
+.footer-social a { font-size: 0.72rem; font-weight: 300; letter-spacing: 0.12em; text-transform: uppercase; color: rgba(139,168,136,0.4); text-decoration: none; transition: color 0.2s; }
+.footer-social a:hover { color: var(--sage); }
+
+@media(max-width:768px) {
+  nav { padding: 1.2rem 1.5rem; }
+  .nav-links { display: none; }
+  #about { grid-template-columns: 1fr; padding: 5rem 2rem; }
+  .about-img-wrap { display: none; }
+  footer { grid-template-columns: 1fr; padding: 3rem 2rem; }
+  .footer-bottom { padding: 1.2rem 2rem; }
+  #faq, #styles, #care { padding: 5rem 2rem; }
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <a class="nav-logo" href="index.html">Ink & Ember</a>
+  <ul class="nav-links">
+    <li><a href="portfolio.html">Portfolio</a></li>
+    <li><a href="index.html#about">About</a></li>
+    <li><a href="index.html#styles">Styles</a></li>
+    <li><a href="index.html#faq">FAQ</a></li>
+    <li><a href="index.html#care">Aftercare</a></li>
+  </ul>
+  <div class="nav-right">
+    <a class="nav-book" href="bookings.html">Book a Session</a>
+    <a class="nav-admin" href="admin.html">Admin</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section id="home">
+  <div class="hero-bg"></div>
+  <p class="hero-eyebrow">Based in Portland, Oregon</p>
+  <h1 class="hero-name">Ember<br><em>Reeves</em></h1>
+  <p class="hero-tagline">Fine line · Botanical · Dark floral tattoo artistry</p>
+  <div class="hero-actions">
+    <a class="btn-primary" href="bookings.html">Book a Session</a>
+    <a class="btn-ghost" href="portfolio.html">View Portfolio</a>
+  </div>
+  <div class="scroll-hint"><span>Scroll</span><div class="scroll-line"></div></div>
+</section>
+
+<!-- ABOUT -->
+<section id="about">
+  <div class="about-img-wrap">
+    <div class="about-img-placeholder">Artist portrait</div>
+    <div class="about-img-accent"></div>
+  </div>
+  <div class="about-content">
+    <p class="about-label">About the Artist</p>
+    <h2 class="about-title">Where <em>nature</em> meets<br>the permanent line</h2>
+    <p class="about-body">Ember Reeves is a Portland-based tattoo artist with over a decade of experience crafting botanical fine-line and dark floral work. Every piece is designed collaboratively — your vision, rendered into something that will move through the world on your skin forever.</p>
+    <p class="about-body">Trained under master artists in Tokyo and Amsterdam, Ember brings a quiet precision to the needle that has earned a global clientele and a waitlist that stretches months ahead.</p>
+    <div class="about-stats">
+      <div><div class="stat-num">10+</div><div class="stat-label">Years in practice</div></div>
+      <div><div class="stat-num">3.2k</div><div class="stat-label">Pieces completed</div></div>
+      <div><div class="stat-num">98%</div><div class="stat-label">Client satisfaction</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- STYLES / SPECIALTIES -->
+<section id="styles">
+  <div class="section-header">
+    <p class="section-label">Specialties</p>
+    <h2 class="section-title">What I create</h2>
+  </div>
+  <div class="styles-grid">
+    <div class="style-card"><div class="style-icon">✦</div><div class="style-name">Fine Line</div><div class="style-desc">Delicate, precise single-needle work. Portraits, text, intricate detail at any scale.</div></div>
+    <div class="style-card"><div class="style-icon">❧</div><div class="style-name">Botanical</div><div class="style-desc">Leaves, florals, and organic forms rendered with botanical illustration accuracy.</div></div>
+    <div class="style-card"><div class="style-icon">✿</div><div class="style-name">Dark Floral</div><div class="style-desc">Moody, layered florals with deep shadow work and dramatic negative space.</div></div>
+    <div class="style-card"><div class="style-icon">◈</div><div class="style-name">Geometric</div><div class="style-desc">Sacred geometry, mandalas, and architectural precision that stands the test of time.</div></div>
+    <div class="style-card"><div class="style-icon">∿</div><div class="style-name">Illustrative</div><div class="style-desc">Storybook characters, whimsical scenes, and illustrated worlds brought to life.</div></div>
+    <div class="style-card"><div class="style-icon">◯</div><div class="style-name">Minimal</div><div class="style-desc">The power of restraint. Tiny, purposeful marks that say everything.</div></div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section id="faq">
+  <div class="faq-inner">
+    <div class="section-header" style="text-align:left;padding:0 0 3rem;">
+      <p class="section-label">Before you come in</p>
+      <h2 class="section-title">Common questions</h2>
+    </div>
+    <div id="faqList"></div>
+  </div>
+</section>
+
+<!-- AFTERCARE -->
+<section id="care">
+  <div class="care-inner">
+    <div class="section-header" style="text-align:left;padding:0 0 3rem;">
+      <p class="section-label">Post-session care</p>
+      <h2 class="section-title">Aftercare guide</h2>
+      <p class="care-intro">Your tattoo is a wound and a work of art. How you care for it in the coming weeks determines how it heals — and how it looks for the rest of your life.</p>
+    </div>
+    <div class="care-section"><p class="care-phase">First 24 hours</p><h3 class="care-title">Immediately after your session</h3><ul class="care-list"><li>Leave the wrap your artist applied on for 2–4 hours (or overnight if using second-skin film).</li><li>Gently wash with lukewarm water and unscented soap using clean hands.</li><li>Pat dry with a clean paper towel — do not rub.</li><li>Apply a thin layer of unscented moisturiser or tattoo balm.</li><li>Wear loose, clean clothing over the area.</li></ul></div>
+    <div class="care-section"><p class="care-phase">Days 2–7</p><h3 class="care-title">The healing stage</h3><ul class="care-list"><li>Wash gently 2× daily and moisturise after each wash.</li><li>Do not pick, scratch, or peel any flaking skin.</li><li>Avoid submerging in water (baths, pools, ocean). Showers are fine.</li><li>Keep the tattoo out of direct sunlight.</li></ul></div>
+    <div class="care-section"><p class="care-phase">Weeks 2–4</p><h3 class="care-title">The long heal</h3><ul class="care-list"><li>Continue daily moisturising until skin is back to normal texture.</li><li>Begin applying SPF 50 whenever the tattoo is exposed to sunlight.</li></ul></div>
+    <div class="care-section"><p class="care-phase">Long-term</p><h3 class="care-title">Keeping it sharp for years</h3><ul class="care-list"><li>SPF every time you're outdoors — UV is the fastest way to fade fine line work.</li><li>Keep skin well-moisturised year-round.</li><li>Touch-ups recommended for fine line work after 1–2 years.</li></ul></div>
+    <div class="care-alert">
+      <p class="care-alert-title">Notice something wrong?</p>
+      <p>Signs of infection include excessive redness, swelling, or fever. Contact a medical professional promptly. Reach Ember at <strong>hello@inkandember.com</strong>.</p>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div>
+    <div class="footer-brand">Ink & Ember</div>
+    <p class="footer-tagline">Permanent art, thoughtfully made. Based in Portland, OR. Booking by appointment only.</p>
+  </div>
+  <div>
+    <p class="footer-col-title">Navigate</p>
+    <ul class="footer-col-links">
+      <li><a href="portfolio.html">Portfolio</a></li>
+      <li><a href="index.html#about">About</a></li>
+      <li><a href="index.html#care">Aftercare</a></li>
+      <li><a href="bookings.html">Book a Session</a></li>
+    </ul>
+  </div>
+  <div>
+    <p class="footer-col-title">Connect</p>
+    <ul class="footer-col-links">
+      <li><a>@inkandember</a></li>
+      <li><a>Instagram</a></li>
+      <li><a>TikTok</a></li>
+      <li><a>hello@inkandember.com</a></li>
+      <li><a>Portland, Oregon</a></li>
+    </ul>
+  </div>
+</footer>
+<div class="footer-bottom">
+  <span class="footer-copy">© 2025 Ink & Ember. All rights reserved.</span>
+  <div class="footer-social"><a>Instagram</a><a>TikTok</a><a>Email</a></div>
+</div>
+
+<script>
+const FAQS = [
+  {q:"How do I start the booking process?",a:"Fill out the booking form on the Booking page. You'll receive a Calendly link to schedule a free consultation. After the consultation, a $100 deposit locks in your session date."},
+  {q:"How much will my tattoo cost?",a:"Pricing depends on size, placement, complexity, and session length. Fine line and botanical work starts at $250. Custom quotes are provided during your consultation."},
+  {q:"Do you do walk-ins?",a:"Ember works by appointment only to give every client the time and focus their piece deserves. The current wait is 6–10 weeks."},
+  {q:"Can I bring my own design or reference images?",a:"Absolutely — and encouraged. Send reference images via email after your booking form is submitted. Ember will adapt and refine any reference into an original design."},
+  {q:"What should I do to prepare for my session?",a:"Eat a full meal before arriving. Stay well-hydrated. Avoid alcohol 24 hours before. Moisturise the area well in the week leading up. Wear comfortable clothing with easy access to the placement."},
+  {q:"Does it hurt?",a:"All tattoos involve some discomfort, though fine line work is generally gentler than heavy shading. Placement matters enormously — ribs and spine are more intense than outer arm or thigh."},
+  {q:"What is your cancellation policy?",a:"72 hours notice is required to reschedule. Cancellations with less notice forfeit the deposit. Reach out as early as possible and we'll do our best to accommodate."},
+  {q:"Do you do cover-ups?",a:"Cover-up work is considered on a case-by-case basis during consultation. Please send a clear photo of the existing tattoo when submitting your booking form."},
+];
+const list = document.getElementById('faqList');
+FAQS.forEach(item => {
+  const el = document.createElement('div');
+  el.className = 'faq-item';
+  el.innerHTML = `<button class="faq-q" onclick="toggleFAQ(this)">${item.q}<span class="faq-icon"></span></button><div class="faq-a">${item.a}</div>`;
+  list.appendChild(el);
+});
+function toggleFAQ(btn) {
+  const item = btn.parentElement;
+  const open = item.classList.contains('open');
+  document.querySelectorAll('.faq-item.open').forEach(el => el.classList.remove('open'));
+  if (!open) item.classList.add('open');
+}
+</script>
+</body>
+</html>

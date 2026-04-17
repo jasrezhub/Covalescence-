@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Portfolio — INK & EMBER</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Jost:wght@200;300;400;500&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --cream: #F5F0E8; --off-white: #FAF7F2; --warm-white: #FFFDF9;
+  --sage: #8BA888; --sage-light: #B4C9B1; --sage-pale: #D6E4D4;
+  --forest: #4A6741; --deep-forest: #2E4229; --moss: #6B8A5E;
+  --charcoal: #2C2C2A; --text-muted: #7A7A72; --border: rgba(74,103,65,0.15);
+}
+html { scroll-behavior: smooth; }
+body { font-family: 'Jost', sans-serif; background: var(--off-white); color: var(--charcoal); overflow-x: hidden; }
+
+/* NAV */
+nav { position: fixed; top: 0; left: 0; right: 0; z-index: 200; display: flex; justify-content: space-between; align-items: center; padding: 1.4rem 3rem; background: rgba(250,247,242,0.93); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); }
+.nav-logo { font-family: 'Cormorant Garamond', serif; font-size: 1.5rem; font-weight: 600; letter-spacing: 0.12em; color: var(--deep-forest); text-decoration: none; }
+.nav-links { display: flex; gap: 2.5rem; list-style: none; }
+.nav-links a { font-size: 0.78rem; font-weight: 300; letter-spacing: 0.18em; text-transform: uppercase; color: var(--charcoal); text-decoration: none; transition: color 0.2s; }
+.nav-links a:hover, .nav-links a.active { color: var(--forest); }
+.nav-right { display: flex; align-items: center; gap: 0.6rem; }
+.nav-book { font-size: 0.75rem; font-weight: 400; letter-spacing: 0.15em; text-transform: uppercase; color: var(--warm-white); background: var(--forest); padding: 0.6rem 1.4rem; text-decoration: none; transition: background 0.2s; }
+.nav-book:hover { background: var(--deep-forest); }
+.nav-admin { font-size: 0.62rem; font-weight: 300; letter-spacing: 0.15em; text-transform: uppercase; color: var(--text-muted); padding: 0.45rem 0.8rem; border: 1px solid var(--border); text-decoration: none; transition: all 0.2s; }
+.nav-admin:hover { color: var(--forest); border-color: var(--forest); }
+
+/* PAGE HEADER */
+.page-header { padding: 12rem 3rem 4rem; text-align: center; background: var(--warm-white); }
+.page-header-label { font-size: 0.68rem; font-weight: 300; letter-spacing: 0.3em; text-transform: uppercase; color: var(--moss); margin-bottom: 0.8rem; }
+.page-header-title { font-family: 'Cormorant Garamond', serif; font-size: clamp(2.5rem,6vw,4.5rem); font-weight: 300; color: var(--deep-forest); line-height: 1.05; }
+.page-header-title em { font-style: italic; color: var(--forest); }
+.page-header-sub { font-size: 0.82rem; font-weight: 300; color: var(--text-muted); margin-top: 1rem; letter-spacing: 0.05em; }
+
+/* GALLERY */
+#gallery { background: var(--off-white); padding: 3rem 0 5rem; overflow: hidden; }
+.gallery-track { position: relative; min-height: 3000px; }
+.gallery-item { position: sticky; top: 15vh; height: 70vh; display: flex; align-items: center; opacity: 0; transition: opacity 0.6s ease, transform 0.6s ease; will-change: opacity,transform; pointer-events: none; margin-bottom: 80px; }
+.gallery-item.from-left  { justify-content: flex-start; padding-left: 8vw;  transform: translateX(-80px); }
+.gallery-item.from-right { justify-content: flex-end;   padding-right: 8vw; transform: translateX(80px);  }
+.gallery-item.visible    { opacity: 1; transform: translateX(0); pointer-events: auto; }
+.gallery-item.fading     { opacity: 0; transform: translateX(0) scale(0.96); }
+.gallery-card { width: min(420px,80vw); background: var(--cream); position: relative; overflow: hidden; }
+.gallery-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: linear-gradient(90deg,var(--sage),var(--forest)); }
+.gallery-img { width: 100%; aspect-ratio: 3/4; display: flex; align-items: center; justify-content: center; font-family: 'Cormorant Garamond', serif; font-size: 1.1rem; font-style: italic; color: var(--text-muted); background: var(--sage-pale); position: relative; overflow: hidden; }
+.gallery-img img { width: 100%; height: 100%; object-fit: cover; position: absolute; inset: 0; }
+.gallery-img .ph { position: relative; z-index: 1; }
+.gallery-img::after { content: ''; position: absolute; inset: 0; background: repeating-linear-gradient(45deg,transparent,transparent 20px,rgba(107,138,94,0.04) 20px,rgba(107,138,94,0.04) 21px); pointer-events: none; }
+.gallery-caption { padding: 1rem 1.2rem; display: flex; justify-content: space-between; align-items: center; }
+.gallery-caption-title { font-family: 'Cormorant Garamond', serif; font-size: 1.05rem; font-weight: 400; color: var(--deep-forest); }
+.gallery-caption-tag { font-size: 0.65rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--moss); }
+.gallery-number { position: absolute; font-family: 'Cormorant Garamond', serif; font-size: 6rem; font-weight: 300; color: rgba(74,103,65,0.08); line-height: 1; top: -10px; }
+.gallery-item.from-left  .gallery-number { right: -20px; }
+.gallery-item.from-right .gallery-number { left: -20px;  }
+
+/* FOOTER */
+footer { background: var(--deep-forest); padding: 4rem 3rem 2rem; display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 3rem; }
+.footer-brand { font-family: 'Cormorant Garamond', serif; font-size: 1.8rem; font-weight: 300; color: var(--sage-pale); margin-bottom: 0.8rem; }
+.footer-tagline { font-size: 0.78rem; font-weight: 300; color: rgba(139,168,136,0.6); line-height: 1.7; max-width: 260px; }
+.footer-col-title { font-size: 0.65rem; font-weight: 400; letter-spacing: 0.25em; text-transform: uppercase; color: var(--sage); margin-bottom: 1.2rem; }
+.footer-col-links { list-style: none; display: flex; flex-direction: column; gap: 0.7rem; }
+.footer-col-links a { font-size: 0.82rem; font-weight: 300; color: rgba(214,228,212,0.6); text-decoration: none; transition: color 0.2s; }
+.footer-col-links a:hover { color: var(--sage-light); }
+.footer-bottom { background: var(--deep-forest); padding: 1.5rem 3rem; border-top: 1px solid rgba(139,168,136,0.15); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.5rem; }
+.footer-copy { font-size: 0.72rem; font-weight: 300; color: rgba(139,168,136,0.4); }
+.footer-social { display: flex; gap: 1.5rem; }
+.footer-social a { font-size: 0.72rem; font-weight: 300; letter-spacing: 0.12em; text-transform: uppercase; color: rgba(139,168,136,0.4); text-decoration: none; transition: color 0.2s; }
+.footer-social a:hover { color: var(--sage); }
+
+@media(max-width:768px) {
+  nav { padding: 1.2rem 1.5rem; }
+  .nav-links { display: none; }
+  .page-header { padding: 9rem 2rem 3rem; }
+  footer { grid-template-columns: 1fr; padding: 3rem 2rem; }
+  .footer-bottom { padding: 1.2rem 2rem; }
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <a class="nav-logo" href="index.html">Ink & Ember</a>
+  <ul class="nav-links">
+    <li><a href="portfolio.html" class="active">Portfolio</a></li>
+    <li><a href="index.html#about">About</a></li>
+    <li><a href="index.html#styles">Styles</a></li>
+    <li><a href="index.html#faq">FAQ</a></li>
+    <li><a href="index.html#care">Aftercare</a></li>
+  </ul>
+  <div class="nav-right">
+    <a class="nav-book" href="bookings.html">Book a Session</a>
+    <a class="nav-admin" href="admin.html">Admin</a>
+  </div>
+</nav>
+
+<div class="page-header">
+  <p class="page-header-label">Portfolio</p>
+  <h1 class="page-header-title">A decade of permanent<br><em>stories on skin</em></h1>
+  <p class="page-header-sub">30 pieces · Fine line · Botanical · Dark floral · Geometric · Illustrative · Minimal</p>
+</div>
+
+<section id="gallery">
+  <div class="gallery-track" id="galleryTrack"></div>
+</section>
+
+<footer>
+  <div>
+    <div class="footer-brand">Ink & Ember</div>
+    <p class="footer-tagline">Permanent art, thoughtfully made. Based in Portland, OR. Booking by appointment only.</p>
+  </div>
+  <div>
+    <p class="footer-col-title">Navigate</p>
+    <ul class="footer-col-links">
+      <li><a href="portfolio.html">Portfolio</a></li>
+      <li><a href="index.html#about">About</a></li>
+      <li><a href="index.html#care">Aftercare</a></li>
+      <li><a href="bookings.html">Book a Session</a></li>
+    </ul>
+  </div>
+  <div>
+    <p class="footer-col-title">Connect</p>
+    <ul class="footer-col-links">
+      <li><a>@inkandember</a></li>
+      <li><a>Instagram</a></li>
+      <li><a>TikTok</a></li>
+      <li><a>hello@inkandember.com</a></li>
+      <li><a>Portland, Oregon</a></li>
+    </ul>
+  </div>
+</footer>
+<div class="footer-bottom">
+  <span class="footer-copy">© 2025 Ink & Ember. All rights reserved.</span>
+  <div class="footer-social"><a>Instagram</a><a>TikTok</a><a>Email</a></div>
+</div>
+
+<script>
+// ── Default gallery data (overridden by anything saved in admin) ──
+const DEFAULT_GALLERY = [
+  {title:'Fern Unfurl',tag:'Botanical · Forearm',img:null},
+  {title:'Midnight Rose',tag:'Dark Floral · Shoulder',img:null},
+  {title:'Moth & Moon',tag:'Illustrative · Sternum',img:null},
+  {title:'Heather Sprig',tag:'Fine Line · Ankle',img:null},
+  {title:'Geometric Elk',tag:'Geometric · Calf',img:null},
+  {title:'Wisteria Fall',tag:'Botanical · Upper Arm',img:null},
+  {title:'Memento Mori',tag:'Dark Floral · Rib',img:null},
+  {title:'Minimal Horizon',tag:'Minimal · Wrist',img:null},
+  {title:'Persimmon Branch',tag:'Fine Line · Collar',img:null},
+  {title:'Storm Raven',tag:'Illustrative · Thigh',img:null},
+  {title:'Seed Pod Study',tag:'Botanical · Inner Arm',img:null},
+  {title:'Cosmos Bloom',tag:'Dark Floral · Back',img:null},
+  {title:'Simple Sigil',tag:'Minimal · Behind Ear',img:null},
+  {title:'Sacred Spiral',tag:'Geometric · Spine',img:null},
+  {title:'Anemone Deep',tag:'Dark Floral · Shoulder',img:null},
+  {title:'Willow Weep',tag:'Fine Line · Forearm',img:null},
+  {title:'Moth Pair',tag:'Illustrative · Chest',img:null},
+  {title:'Laurel Crown',tag:'Botanical · Wrist',img:null},
+  {title:'Tarot — The Star',tag:'Illustrative · Thigh',img:null},
+  {title:'Obsidian Lily',tag:'Dark Floral · Rib',img:null},
+  {title:'Compass Rose',tag:'Geometric · Shoulder',img:null},
+  {title:'Ranunculus',tag:'Fine Line · Ankle',img:null},
+  {title:'Lone Wolf',tag:'Illustrative · Upper Arm',img:null},
+  {title:'Winter Thorn',tag:'Botanical · Forearm',img:null},
+  {title:'Eclipse Mark',tag:'Minimal · Finger',img:null},
+  {title:'Dahlia Black',tag:'Dark Floral · Back',img:null},
+  {title:'Triangulum',tag:'Geometric · Chest',img:null},
+  {title:'Dragonfly Still',tag:'Fine Line · Collar',img:null},
+  {title:'Night Garden',tag:'Dark Floral · Sleeve',img:null},
+  {title:'The Wandering Root',tag:'Botanical · Full Leg',img:null},
+];
+
+function loadGallery() {
+  try {
+    const saved = localStorage.getItem('ie_gallery');
+    return saved ? JSON.parse(saved) : DEFAULT_GALLERY;
+  } catch { return DEFAULT_GALLERY; }
+}
+
+function buildGallery() {
+  const data = loadGallery();
+  const track = document.getElementById('galleryTrack');
+  track.innerHTML = '';
+  data.forEach((item, i) => {
+    const left = i % 2 === 0;
+    const el = document.createElement('div');
+    el.className = `gallery-item ${left ? 'from-left' : 'from-right'}`;
+    el.innerHTML = `
+      <div class="gallery-card">
+        <div class="gallery-number">${String(i+1).padStart(2,'0')}</div>
+        <div class="gallery-img">
+          ${item.img ? `<img src="${item.img}" alt="${item.title}">` : `<span class="ph">${item.title}</span>`}
+        </div>
+        <div class="gallery-caption">
+          <span class="gallery-caption-title">${item.title}</span>
+          <span class="gallery-caption-tag">${item.tag}</span>
+        </div>
+      </div>
+    `;
+    track.appendChild(el);
+  });
+
+  // Scroll reveal observer
+  const obs = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('visible');
+        e.target.classList.remove('fading');
+      } else {
+        const r = e.target.getBoundingClientRect();
+        if (r.bottom < 0) { e.target.classList.add('fading'); e.target.classList.remove('visible'); }
+        else { e.target.classList.remove('visible','fading'); }
+      }
+    });
+  }, { threshold: 0.25, rootMargin: '-5% 0px -5% 0px' });
+
+  document.querySelectorAll('.gallery-item').forEach(el => obs.observe(el));
+}
+
+buildGallery();
+</script>
+</body>
+</html>

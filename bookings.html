@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Book a Session — INK & EMBER</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Jost:wght@200;300;400;500&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --cream: #F5F0E8; --off-white: #FAF7F2; --warm-white: #FFFDF9;
+  --sage: #8BA888; --sage-light: #B4C9B1; --sage-pale: #D6E4D4;
+  --forest: #4A6741; --deep-forest: #2E4229; --moss: #6B8A5E;
+  --charcoal: #2C2C2A; --text-muted: #7A7A72; --border: rgba(74,103,65,0.15);
+}
+html { scroll-behavior: smooth; }
+body { font-family: 'Jost', sans-serif; background: var(--warm-white); color: var(--charcoal); overflow-x: hidden; }
+
+/* NAV */
+nav { position: fixed; top: 0; left: 0; right: 0; z-index: 200; display: flex; justify-content: space-between; align-items: center; padding: 1.4rem 3rem; background: rgba(255,253,249,0.93); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); }
+.nav-logo { font-family: 'Cormorant Garamond', serif; font-size: 1.5rem; font-weight: 600; letter-spacing: 0.12em; color: var(--deep-forest); text-decoration: none; }
+.nav-links { display: flex; gap: 2.5rem; list-style: none; }
+.nav-links a { font-size: 0.78rem; font-weight: 300; letter-spacing: 0.18em; text-transform: uppercase; color: var(--charcoal); text-decoration: none; transition: color 0.2s; }
+.nav-links a:hover { color: var(--forest); }
+.nav-right { display: flex; align-items: center; gap: 0.6rem; }
+.nav-book { font-size: 0.75rem; font-weight: 400; letter-spacing: 0.15em; text-transform: uppercase; color: var(--warm-white); background: var(--forest); padding: 0.6rem 1.4rem; text-decoration: none; transition: background 0.2s; }
+.nav-book:hover { background: var(--deep-forest); }
+.nav-admin { font-size: 0.62rem; font-weight: 300; letter-spacing: 0.15em; text-transform: uppercase; color: var(--text-muted); padding: 0.45rem 0.8rem; border: 1px solid var(--border); text-decoration: none; transition: all 0.2s; }
+.nav-admin:hover { color: var(--forest); border-color: var(--forest); }
+
+/* PAGE */
+.booking-page { min-height: 100vh; padding: 10rem 3rem 6rem; }
+.booking-layout { max-width: 1100px; margin: 0 auto; display: grid; grid-template-columns: 1fr 1.2fr; gap: 5rem; align-items: start; }
+
+/* LEFT COLUMN */
+.section-label { font-size: 0.68rem; font-weight: 300; letter-spacing: 0.3em; text-transform: uppercase; color: var(--moss); margin-bottom: 1rem; }
+.booking-info-title { font-family: 'Cormorant Garamond', serif; font-size: clamp(2rem,4vw,3rem); font-weight: 300; color: var(--deep-forest); line-height: 1.1; margin-bottom: 1rem; }
+.booking-info-title em { font-style: italic; color: var(--forest); }
+.booking-info-sub { font-size: 0.85rem; font-weight: 300; line-height: 1.8; color: var(--text-muted); margin-bottom: 2.5rem; }
+.booking-details { display: flex; flex-direction: column; gap: 1.2rem; }
+.booking-detail-item { display: flex; gap: 1rem; align-items: flex-start; }
+.booking-detail-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--forest); flex-shrink: 0; margin-top: 0.45rem; }
+.booking-detail-text { font-size: 0.83rem; font-weight: 300; line-height: 1.7; color: var(--charcoal); }
+.booking-detail-text strong { font-weight: 400; }
+
+/* FORM */
+.booking-form-wrap { background: var(--cream); padding: 2.5rem; border-top: 3px solid var(--forest); }
+.form-title { font-family: 'Cormorant Garamond', serif; font-size: 1.6rem; font-weight: 400; color: var(--deep-forest); margin-bottom: 0.4rem; }
+.form-subtitle { font-size: 0.78rem; font-weight: 300; color: var(--text-muted); margin-bottom: 2rem; }
+.form-group { margin-bottom: 1.4rem; }
+.form-label { display: block; font-size: 0.68rem; font-weight: 400; letter-spacing: 0.15em; text-transform: uppercase; color: var(--moss); margin-bottom: 0.5rem; }
+.form-input, .form-select, .form-textarea { width: 100%; font-family: 'Jost', sans-serif; font-size: 0.88rem; font-weight: 300; color: var(--charcoal); background: var(--off-white); border: 1px solid rgba(74,103,65,0.2); padding: 0.8rem 1rem; outline: none; transition: border-color 0.2s; -webkit-appearance: none; }
+.form-input:focus, .form-select:focus, .form-textarea:focus { border-color: var(--forest); }
+.form-select { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%234A6741' stroke-width='1.5' fill='none'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 1rem center; cursor: pointer; }
+.form-textarea { resize: vertical; min-height: 100px; line-height: 1.6; }
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+.form-submit { width: 100%; font-family: 'Jost', sans-serif; font-size: 0.78rem; font-weight: 400; letter-spacing: 0.2em; text-transform: uppercase; color: var(--warm-white); background: var(--forest); border: none; padding: 1.1rem; cursor: pointer; transition: background 0.2s; margin-top: 0.5rem; }
+.form-submit:hover { background: var(--deep-forest); }
+.form-privacy { font-size: 0.7rem; font-weight: 300; color: var(--text-muted); text-align: center; margin-top: 0.8rem; line-height: 1.6; }
+.form-error { font-size: 0.72rem; color: #c0392b; margin-top: 0.4rem; display: none; }
+
+/* SUCCESS STATE */
+.booking-success { display: none; text-align: center; padding: 3rem 2rem; }
+.booking-success.active { display: block; }
+.success-icon { width: 60px; height: 60px; border-radius: 50%; background: var(--sage-pale); display: flex; align-items: center; justify-content: center; margin: 0 auto 1.5rem; }
+.success-icon svg { width: 28px; height: 28px; stroke: var(--forest); fill: none; stroke-linecap: round; stroke-linejoin: round; stroke-width: 1.5; }
+.success-title { font-family: 'Cormorant Garamond', serif; font-size: 1.8rem; font-weight: 300; color: var(--deep-forest); margin-bottom: 0.5rem; }
+.success-text { font-size: 0.85rem; font-weight: 300; line-height: 1.8; color: var(--text-muted); margin-bottom: 2rem; }
+.calendly-btn { display: inline-block; font-size: 0.75rem; font-weight: 400; letter-spacing: 0.18em; text-transform: uppercase; color: var(--warm-white); background: var(--forest); padding: 1rem 2.5rem; text-decoration: none; transition: background 0.2s; margin-bottom: 0.8rem; }
+.calendly-btn:hover { background: var(--deep-forest); }
+.calendly-note { font-size: 0.72rem; font-weight: 300; color: var(--text-muted); }
+
+/* FOOTER */
+footer { background: var(--deep-forest); padding: 4rem 3rem 2rem; display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 3rem; margin-top: 4rem; }
+.footer-brand { font-family: 'Cormorant Garamond', serif; font-size: 1.8rem; font-weight: 300; color: var(--sage-pale); margin-bottom: 0.8rem; }
+.footer-tagline { font-size: 0.78rem; font-weight: 300; color: rgba(139,168,136,0.6); line-height: 1.7; max-width: 260px; }
+.footer-col-title { font-size: 0.65rem; font-weight: 400; letter-spacing: 0.25em; text-transform: uppercase; color: var(--sage); margin-bottom: 1.2rem; }
+.footer-col-links { list-style: none; display: flex; flex-direction: column; gap: 0.7rem; }
+.footer-col-links a { font-size: 0.82rem; font-weight: 300; color: rgba(214,228,212,0.6); text-decoration: none; transition: color 0.2s; }
+.footer-col-links a:hover { color: var(--sage-light); }
+.footer-bottom { background: var(--deep-forest); padding: 1.5rem 3rem; border-top: 1px solid rgba(139,168,136,0.15); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.5rem; }
+.footer-copy { font-size: 0.72rem; font-weight: 300; color: rgba(139,168,136,0.4); }
+.footer-social { display: flex; gap: 1.5rem; }
+.footer-social a { font-size: 0.72rem; font-weight: 300; letter-spacing: 0.12em; text-transform: uppercase; color: rgba(139,168,136,0.4); text-decoration: none; transition: color 0.2s; }
+.footer-social a:hover { color: var(--sage); }
+
+@media(max-width:768px) {
+  nav { padding: 1.2rem 1.5rem; }
+  .nav-links { display: none; }
+  .booking-page { padding: 8rem 1.5rem 4rem; }
+  .booking-layout { grid-template-columns: 1fr; gap: 3rem; }
+  .form-row { grid-template-columns: 1fr; }
+  footer { grid-template-columns: 1fr; padding: 3rem 2rem; }
+  .footer-bottom { padding: 1.2rem 2rem; }
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <a class="nav-logo" href="index.html">Ink & Ember</a>
+  <ul class="nav-links">
+    <li><a href="portfolio.html">Portfolio</a></li>
+    <li><a href="index.html#about">About</a></li>
+    <li><a href="index.html#styles">Styles</a></li>
+    <li><a href="index.html#faq">FAQ</a></li>
+    <li><a href="index.html#care">Aftercare</a></li>
+  </ul>
+  <div class="nav-right">
+    <a class="nav-book" href="bookings.html">Book a Session</a>
+    <a class="nav-admin" href="admin.html">Admin</a>
+  </div>
+</nav>
+
+<div class="booking-page">
+  <div class="booking-layout">
+
+    <!-- LEFT: Info -->
+    <div>
+      <p class="section-label">Book a Session</p>
+      <h1 class="booking-info-title">Let's create<br><em>something lasting</em></h1>
+      <p class="booking-info-sub">Fill out the form and you'll receive a Calendly link to choose your consultation slot. A deposit is required to hold your appointment.</p>
+      <div class="booking-details">
+        <div class="booking-detail-item"><div class="booking-detail-dot"></div><p class="booking-detail-text"><strong>Consultations</strong> are 30 minutes, free, and held via video or in-studio.</p></div>
+        <div class="booking-detail-item"><div class="booking-detail-dot"></div><p class="booking-detail-text">A <strong>$100 deposit</strong> is required to hold your session date. Applied to your final total.</p></div>
+        <div class="booking-detail-item"><div class="booking-detail-dot"></div><p class="booking-detail-text">Sessions run <strong>2–8 hours</strong> depending on size and complexity.</p></div>
+        <div class="booking-detail-item"><div class="booking-detail-dot"></div><p class="booking-detail-text">Cancellations require <strong>72 hours notice</strong> to retain deposit eligibility.</p></div>
+        <div class="booking-detail-item"><div class="booking-detail-dot"></div><p class="booking-detail-text">Current wait time is <strong>6–10 weeks</strong> from consultation to session.</p></div>
+      </div>
+    </div>
+
+    <!-- RIGHT: Form -->
+    <div class="booking-form-wrap">
+      <div id="bookingForm">
+        <p class="form-title">Tell me about your vision</p>
+        <p class="form-subtitle">Step 1 of 2 — Your details</p>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">First Name</label>
+            <input class="form-input" type="text" id="fname" placeholder="Sage">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Last Name</label>
+            <input class="form-input" type="text" placeholder="Walker">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Email Address</label>
+          <input class="form-input" type="email" id="emailInput" placeholder="you@example.com">
+          <div class="form-error" id="emailError">Please enter a valid email address.</div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Phone (optional)</label>
+          <input class="form-input" type="tel" placeholder="+1 (555) 000-0000">
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Style of Interest</label>
+          <select class="form-select">
+            <option value="">Select a style...</option>
+            <option>Fine Line</option>
+            <option>Botanical</option>
+            <option>Dark Floral</option>
+            <option>Geometric</option>
+            <option>Illustrative</option>
+            <option>Minimal</option>
+            <option>Not sure — let's talk</option>
+          </select>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Placement</label>
+            <input class="form-input" type="text" placeholder="Inner forearm, ribs...">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Approx. Size</label>
+            <select class="form-select">
+              <option value="">Select...</option>
+              <option>Tiny (&lt; 2")</option>
+              <option>Small (2–4")</option>
+              <option>Medium (4–8")</option>
+              <option>Large (8"+)</option>
+              <option>Full sleeve / bodywork</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Describe your idea</label>
+          <textarea class="form-textarea" placeholder="Share your vision — the more detail the better. Reference images can be sent after booking."></textarea>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">How did you hear about me?</label>
+          <select class="form-select">
+            <option>Instagram</option>
+            <option>TikTok</option>
+            <option>Friend / word of mouth</option>
+            <option>Google search</option>
+            <option>Other</option>
+          </select>
+        </div>
+
+        <button class="form-submit" onclick="submitBooking()">Continue to Scheduling →</button>
+        <p class="form-privacy">Your information is used only to process your booking request. We never share or sell your data.</p>
+      </div>
+
+      <!-- Success state -->
+      <div class="booking-success" id="bookingSuccess">
+        <div class="success-icon">
+          <svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg>
+        </div>
+        <h2 class="success-title">Request received</h2>
+        <p class="success-text" id="successText">A confirmation has been sent to your email. Click below to choose your consultation time — Ember will confirm within 24 hours.</p>
+        <!-- Replace href with your actual Calendly link -->
+        <a class="calendly-btn" href="https://calendly.com" target="_blank">Choose Your Time on Calendly →</a>
+        <p class="calendly-note">Opens Calendly in a new tab · 30-minute consultation · Free</p>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<footer>
+  <div>
+    <div class="footer-brand">Ink & Ember</div>
+    <p class="footer-tagline">Permanent art, thoughtfully made. Based in Portland, OR. Booking by appointment only.</p>
+  </div>
+  <div>
+    <p class="footer-col-title">Navigate</p>
+    <ul class="footer-col-links">
+      <li><a href="portfolio.html">Portfolio</a></li>
+      <li><a href="index.html#about">About</a></li>
+      <li><a href="index.html#care">Aftercare</a></li>
+      <li><a href="bookings.html">Book a Session</a></li>
+    </ul>
+  </div>
+  <div>
+    <p class="footer-col-title">Connect</p>
+    <ul class="footer-col-links">
+      <li><a>@inkandember</a></li>
+      <li><a>Instagram</a></li>
+      <li><a>TikTok</a></li>
+      <li><a>hello@inkandember.com</a></li>
+      <li><a>Portland, Oregon</a></li>
+    </ul>
+  </div>
+</footer>
+<div class="footer-bottom">
+  <span class="footer-copy">© 2025 Ink & Ember. All rights reserved.</span>
+  <div class="footer-social"><a>Instagram</a><a>TikTok</a><a>Email</a></div>
+</div>
+
+<script>
+function submitBooking() {
+  const emailEl = document.getElementById('emailInput');
+  const errorEl = document.getElementById('emailError');
+  const email = emailEl.value.trim();
+
+  if (!email || !email.includes('@')) {
+    emailEl.style.borderColor = '#c0392b';
+    errorEl.style.display = 'block';
+    emailEl.focus();
+    return;
+  }
+
+  errorEl.style.display = 'none';
+  emailEl.style.borderColor = '';
+  document.getElementById('bookingForm').style.display = 'none';
+  document.getElementById('bookingSuccess').classList.add('active');
+  const fname = document.getElementById('fname').value.trim();
+  document.getElementById('successText').textContent =
+    `A confirmation has been sent to ${email}. Click below to choose your consultation slot — Ember will confirm within 24 hours.`;
+}
+</script>
+</body>
+</html>

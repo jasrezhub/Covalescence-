@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin — INK & EMBER</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Jost:wght@200;300;400;500&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --forest: #4A6741; --deep-forest: #2E4229; --sage: #8BA888;
+  --sage-light: #B4C9B1; --sage-pale: #D6E4D4; --warm-white: #FFFDF9;
+  --admin-bg:     #171C16;
+  --admin-panel:  #1F241E;
+  --admin-card:   #272D26;
+  --admin-border: rgba(139,168,136,0.13);
+  --admin-accent: #5A8050;
+  --admin-text:   #C5D5C2;
+  --admin-muted:  #657062;
+}
+html { scroll-behavior: smooth; }
+body { font-family: 'Jost', sans-serif; background: var(--admin-bg); color: var(--admin-text); min-height: 100vh; }
+
+/* ── LOGIN SCREEN ── */
+#loginScreen {
+  min-height: 100vh; display: flex; align-items: center; justify-content: center;
+  background: var(--admin-bg);
+}
+.login-box { width: min(400px,92vw); background: var(--admin-panel); border: 1px solid var(--admin-border); padding: 3rem 2.5rem; }
+.login-logo { font-family: 'Cormorant Garamond', serif; font-size: 1.9rem; font-weight: 300; color: var(--sage-light); margin-bottom: 0.2rem; }
+.login-sub { font-size: 0.65rem; letter-spacing: 0.22em; text-transform: uppercase; color: var(--admin-muted); margin-bottom: 2.5rem; }
+.login-label { display: block; font-size: 0.63rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--admin-muted); margin-bottom: 0.5rem; }
+.login-input { width: 100%; font-family: 'Jost', sans-serif; font-size: 0.9rem; background: var(--admin-card); border: 1px solid var(--admin-border); color: var(--admin-text); padding: 0.85rem 1rem; outline: none; transition: border-color 0.2s; margin-bottom: 1.2rem; }
+.login-input:focus { border-color: var(--admin-accent); }
+.login-btn { width: 100%; font-family: 'Jost', sans-serif; font-size: 0.75rem; font-weight: 400; letter-spacing: 0.2em; text-transform: uppercase; color: white; background: var(--admin-accent); border: none; padding: 1rem; cursor: pointer; transition: background 0.2s; margin-top: 0.4rem; }
+.login-btn:hover { background: var(--forest); }
+.login-error { font-size: 0.75rem; color: #e05555; margin-top: 0.8rem; display: none; text-align: center; }
+.login-back { display: block; margin-top: 1.2rem; font-size: 0.72rem; color: var(--admin-muted); text-align: center; text-decoration: none; transition: color 0.2s; }
+.login-back:hover { color: var(--admin-text); }
+
+/* ── DASHBOARD ── */
+#dashboard { display: none; }
+
+.admin-topbar { position: sticky; top: 0; z-index: 100; background: var(--admin-panel); border-bottom: 1px solid var(--admin-border); display: flex; justify-content: space-between; align-items: center; padding: 0.9rem 2rem; }
+.admin-brand { font-family: 'Cormorant Garamond', serif; font-size: 1.2rem; font-weight: 300; color: var(--sage-light); }
+.admin-brand small { font-family: 'Jost', sans-serif; font-size: 0.6rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--admin-muted); margin-left: 0.8rem; }
+.topbar-right { display: flex; gap: 0.7rem; align-items: center; }
+
+.abtn { font-family: 'Jost', sans-serif; font-size: 0.68rem; font-weight: 400; letter-spacing: 0.15em; text-transform: uppercase; padding: 0.5rem 1rem; border: 1px solid var(--admin-border); background: none; color: var(--admin-muted); cursor: pointer; transition: all 0.15s; text-decoration: none; display: inline-block; }
+.abtn:hover { color: var(--admin-text); border-color: rgba(197,213,194,0.3); }
+.abtn.save { background: var(--admin-accent); border-color: var(--admin-accent); color: white; }
+.abtn.save:hover { background: var(--forest); border-color: var(--forest); }
+.abtn.logout { color: rgba(220,80,80,0.6); border-color: rgba(220,80,80,0.2); }
+.abtn.logout:hover { color: #e05555; border-color: rgba(220,80,80,0.5); background: rgba(220,80,80,0.05); }
+.abtn.danger { color: rgba(220,80,80,0.55); border-color: rgba(220,80,80,0.15); }
+.abtn.danger:hover { color: #e05555; border-color: rgba(220,80,80,0.4); }
+
+.admin-body { padding: 1.5rem 2rem 4rem; max-width: 1500px; margin: 0 auto; }
+.admin-page-title { font-family: 'Cormorant Garamond', serif; font-size: 1.8rem; font-weight: 300; color: var(--sage-pale); margin-bottom: 0.2rem; }
+.admin-page-sub { font-size: 0.75rem; font-weight: 300; color: var(--admin-muted); margin-bottom: 1.5rem; }
+
+/* Stats bar */
+.admin-stats { display: grid; grid-template-columns: repeat(4,1fr); gap: 1px; background: var(--admin-border); margin-bottom: 1.5rem; }
+.a-stat { background: var(--admin-panel); padding: 1.1rem 1.4rem; }
+.a-stat-n { font-family: 'Cormorant Garamond', serif; font-size: 2rem; font-weight: 300; color: var(--sage-light); }
+.a-stat-l { font-size: 0.62rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--admin-muted); margin-top: 0.2rem; }
+.a-stat.unsaved .a-stat-n { color: #c9a84c; }
+
+/* Toolbar */
+.admin-toolbar { display: flex; gap: 0.8rem; align-items: center; margin-bottom: 1.2rem; flex-wrap: wrap; }
+.admin-search { font-family: 'Jost', sans-serif; font-size: 0.82rem; background: var(--admin-card); border: 1px solid var(--admin-border); color: var(--admin-text); padding: 0.6rem 1rem; outline: none; flex: 1; min-width: 200px; transition: border-color 0.2s; }
+.admin-search:focus { border-color: var(--admin-accent); }
+.admin-search::placeholder { color: var(--admin-muted); }
+
+/* Grid */
+.admin-grid { display: grid; grid-template-columns: repeat(auto-fill,minmax(240px,1fr)); gap: 1.5px; background: var(--admin-border); }
+
+.a-card { background: var(--admin-panel); position: relative; cursor: grab; user-select: none; transition: transform 0.15s; }
+.a-card:active { cursor: grabbing; }
+.a-card.dragging { opacity: 0.35; transform: scale(0.97); }
+.a-card.drag-over { outline: 2px dashed var(--admin-accent); outline-offset: -3px; }
+
+.a-card-img { width: 100%; aspect-ratio: 3/4; background: var(--admin-card); position: relative; overflow: hidden; display: flex; align-items: center; justify-content: center; }
+.a-card-img img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.a-no-img { display: flex; flex-direction: column; align-items: center; gap: 0.5rem; color: var(--admin-muted); font-size: 0.68rem; letter-spacing: 0.1em; text-transform: uppercase; }
+.a-no-img svg { width: 30px; height: 30px; stroke: var(--admin-muted); opacity: 0.5; fill: none; stroke-width: 1; }
+
+.a-upload-hover { position: absolute; inset: 0; background: rgba(15,20,14,0.78); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 0.6rem; opacity: 0; transition: opacity 0.2s; pointer-events: none; }
+.a-card-img:hover .a-upload-hover { opacity: 1; }
+.a-upload-hover svg { width: 26px; height: 26px; stroke: var(--sage-light); fill: none; stroke-width: 1.5; stroke-linecap: round; }
+.a-upload-hover span { font-size: 0.65rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--sage-light); }
+.a-file-input { position: absolute; inset: 0; opacity: 0; cursor: pointer; pointer-events: all; }
+
+.a-card-body { padding: 0.7rem 0.9rem; border-top: 1px solid var(--admin-border); }
+.a-slot-num { font-size: 0.58rem; letter-spacing: 0.2em; color: var(--admin-muted); text-transform: uppercase; margin-bottom: 0.35rem; }
+.a-field { font-family: 'Jost', sans-serif; font-size: 0.8rem; font-weight: 300; background: none; border: none; border-bottom: 1px solid transparent; color: var(--admin-text); width: 100%; outline: none; padding: 0.2rem 0; transition: border-color 0.2s; }
+.a-field:focus { border-bottom-color: var(--admin-accent); }
+.a-field::placeholder { color: var(--admin-muted); }
+.a-field.ttl { font-size: 0.85rem; margin-bottom: 0.2rem; }
+.a-field.tg { font-size: 0.7rem; color: var(--admin-muted); }
+
+.a-card-actions { display: flex; gap: 0.4rem; margin-top: 0.6rem; align-items: center; }
+.ca-btn { font-family: 'Jost', sans-serif; font-size: 0.6rem; letter-spacing: 0.1em; text-transform: uppercase; padding: 0.28rem 0.55rem; border: 1px solid var(--admin-border); background: none; color: var(--admin-muted); cursor: pointer; transition: all 0.15s; }
+.ca-btn:hover { color: var(--admin-text); border-color: rgba(197,213,194,0.25); }
+.ca-btn.del { color: rgba(220,80,80,0.45); border-color: rgba(220,80,80,0.15); }
+.ca-btn.del:hover { color: #e05555; border-color: rgba(220,80,80,0.4); }
+.drag-handle { font-size: 1rem; color: var(--admin-muted); cursor: grab; padding: 0.2rem 0.3rem; margin-left: auto; line-height: 1; }
+
+/* Toast */
+.toast { position: fixed; bottom: 2rem; right: 2rem; z-index: 9999; background: var(--admin-accent); color: white; padding: 0.85rem 1.4rem; font-size: 0.78rem; letter-spacing: 0.05em; opacity: 0; transform: translateY(8px); transition: opacity 0.3s, transform 0.3s; pointer-events: none; }
+.toast.show { opacity: 1; transform: translateY(0); }
+
+@media(max-width:768px) {
+  .admin-stats { grid-template-columns: 1fr 1fr; }
+  .admin-grid { grid-template-columns: repeat(auto-fill,minmax(160px,1fr)); }
+  .admin-body { padding: 1rem 1rem 4rem; }
+  .topbar-right .abtn:not(.save):not(.logout) { display: none; }
+}
+</style>
+</head>
+<body>
+
+<!-- ════════════════════════
+     LOGIN SCREEN
+════════════════════════ -->
+<div id="loginScreen">
+  <div class="login-box">
+    <div class="login-logo">Ink & Ember</div>
+    <div class="login-sub">Admin Portal</div>
+    <label class="login-label">Username</label>
+    <input class="login-input" type="text" id="loginUser" placeholder="admin" autocomplete="username">
+    <label class="login-label">Password</label>
+    <input class="login-input" type="password" id="loginPass" placeholder="••••••••" autocomplete="current-password">
+    <button class="login-btn" onclick="doLogin()">Sign In →</button>
+    <div class="login-error" id="loginError">Incorrect credentials. Please try again.</div>
+    <a class="login-back" href="index.html">← Back to site</a>
+  </div>
+</div>
+
+<!-- ════════════════════════
+     DASHBOARD
+════════════════════════ -->
+<div id="dashboard">
+
+  <div class="admin-topbar">
+    <div>
+      <span class="admin-brand">Ink & Ember <small>Portfolio Manager</small></span>
+    </div>
+    <div class="topbar-right">
+      <a class="abtn" href="portfolio.html" target="_blank">← View Portfolio</a>
+      <button class="abtn save" onclick="saveAll()">Save &amp; Publish</button>
+      <button class="abtn logout" onclick="doLogout()">Log Out</button>
+    </div>
+  </div>
+
+  <div class="admin-body">
+    <div class="admin-page-title">Gallery Manager</div>
+    <div class="admin-page-sub">Drag cards to reorder · Hover an image to upload a new one · Edit titles &amp; tags inline · Click Save &amp; Publish when done</div>
+
+    <div class="admin-stats">
+      <div class="a-stat"><div class="a-stat-n" id="statTotal">30</div><div class="a-stat-l">Total slots</div></div>
+      <div class="a-stat"><div class="a-stat-n" id="statFilled">0</div><div class="a-stat-l">With images</div></div>
+      <div class="a-stat"><div class="a-stat-n" id="statEmpty">30</div><div class="a-stat-l">Empty slots</div></div>
+      <div class="a-stat unsaved"><div class="a-stat-n" id="statUnsaved">0</div><div class="a-stat-l">Unsaved changes</div></div>
+    </div>
+
+    <div class="admin-toolbar">
+      <input class="admin-search" type="text" id="searchInput" placeholder="Search by title or tag…">
+      <button class="abtn" onclick="addSlot()">+ Add Slot</button>
+      <button class="abtn danger" onclick="clearAllImages()">Clear All Images</button>
+    </div>
+
+    <div class="admin-grid" id="adminGrid"></div>
+  </div>
+
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ════════════════════════════════════
+// CREDENTIALS — change before deploying
+// ════════════════════════════════════
+const CREDS = { user: 'admin', pass: 'inkember2025' };
+
+// ════════════════════════════════════
+// DEFAULT GALLERY DATA
+// ════════════════════════════════════
+const DEFAULT_GALLERY = [
+  {title:'Fern Unfurl',tag:'Botanical · Forearm',img:null},
+  {title:'Midnight Rose',tag:'Dark Floral · Shoulder',img:null},
+  {title:'Moth & Moon',tag:'Illustrative · Sternum',img:null},
+  {title:'Heather Sprig',tag:'Fine Line · Ankle',img:null},
+  {title:'Geometric Elk',tag:'Geometric · Calf',img:null},
+  {title:'Wisteria Fall',tag:'Botanical · Upper Arm',img:null},
+  {title:'Memento Mori',tag:'Dark Floral · Rib',img:null},
+  {title:'Minimal Horizon',tag:'Minimal · Wrist',img:null},
+  {title:'Persimmon Branch',tag:'Fine Line · Collar',img:null},
+  {title:'Storm Raven',tag:'Illustrative · Thigh',img:null},
+  {title:'Seed Pod Study',tag:'Botanical · Inner Arm',img:null},
+  {title:'Cosmos Bloom',tag:'Dark Floral · Back',img:null},
+  {title:'Simple Sigil',tag:'Minimal · Behind Ear',img:null},
+  {title:'Sacred Spiral',tag:'Geometric · Spine',img:null},
+  {title:'Anemone Deep',tag:'Dark Floral · Shoulder',img:null},
+  {title:'Willow Weep',tag:'Fine Line · Forearm',img:null},
+  {title:'Moth Pair',tag:'Illustrative · Chest',img:null},
+  {title:'Laurel Crown',tag:'Botanical · Wrist',img:null},
+  {title:'Tarot — The Star',tag:'Illustrative · Thigh',img:null},
+  {title:'Obsidian Lily',tag:'Dark Floral · Rib',img:null},
+  {title:'Compass Rose',tag:'Geometric · Shoulder',img:null},
+  {title:'Ranunculus',tag:'Fine Line · Ankle',img:null},
+  {title:'Lone Wolf',tag:'Illustrative · Upper Arm',img:null},
+  {title:'Winter Thorn',tag:'Botanical · Forearm',img:null},
+  {title:'Eclipse Mark',tag:'Minimal · Finger',img:null},
+  {title:'Dahlia Black',tag:'Dark Floral · Back',img:null},
+  {title:'Triangulum',tag:'Geometric · Chest',img:null},
+  {title:'Dragonfly Still',tag:'Fine Line · Collar',img:null},
+  {title:'Night Garden',tag:'Dark Floral · Sleeve',img:null},
+  {title:'The Wandering Root',tag:'Botanical · Full Leg',img:null},
+];
+
+// ════════════════════════════════════
+// STATE
+// ════════════════════════════════════
+let gallery = [];
+let changes = 0;
+let dragIdx = null;
+let toastTimer;
+
+function loadGallery() {
+  try {
+    const s = localStorage.getItem('ie_gallery');
+    gallery = s ? JSON.parse(s) : JSON.parse(JSON.stringify(DEFAULT_GALLERY));
+  } catch {
+    gallery = JSON.parse(JSON.stringify(DEFAULT_GALLERY));
+  }
+}
+
+function persistGallery() {
+  localStorage.setItem('ie_gallery', JSON.stringify(gallery));
+}
+
+// ════════════════════════════════════
+// AUTH
+// ════════════════════════════════════
+document.getElementById('loginPass').addEventListener('keydown', e => {
+  if (e.key === 'Enter') doLogin();
+});
+
+function doLogin() {
+  const u = document.getElementById('loginUser').value.trim();
+  const p = document.getElementById('loginPass').value;
+  if (u === CREDS.user && p === CREDS.pass) {
+    document.getElementById('loginScreen').style.display = 'none';
+    document.getElementById('dashboard').style.display = 'block';
+    loadGallery();
+    buildGrid();
+    updateStats();
+  } else {
+    document.getElementById('loginError').style.display = 'block';
+    document.getElementById('loginPass').value = '';
+    document.getElementById('loginPass').focus();
+  }
+}
+
+function doLogout() {
+  document.getElementById('dashboard').style.display = 'none';
+  document.getElementById('loginScreen').style.display = 'flex';
+  document.getElementById('loginPass').value = '';
+  document.getElementById('loginUser').value = '';
+  document.getElementById('loginError').style.display = 'none';
+}
+
+// ════════════════════════════════════
+// GRID
+// ════════════════════════════════════
+function buildGrid(filter) {
+  const grid = document.getElementById('adminGrid');
+  grid.innerHTML = '';
+
+  gallery.forEach((item, i) => {
+    if (filter && !item.title.toLowerCase().includes(filter) && !item.tag.toLowerCase().includes(filter)) return;
+
+    const card = document.createElement('div');
+    card.className = 'a-card';
+    card.draggable = true;
+    card.dataset.i = i;
+
+    card.innerHTML = `
+      <div class="a-card-img">
+        ${item.img
+          ? `<img src="${item.img}" alt="${item.title}">`
+          : `<div class="a-no-img">
+               <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="1"/><path d="M3 15l5-5 4 4 3-3 6 6"/><circle cx="8.5" cy="8.5" r="1.5"/></svg>
+               No image
+             </div>`
+        }
+        <div class="a-upload-hover">
+          <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+          <span>Upload Photo</span>
+        </div>
+        <input class="a-file-input" type="file" accept="image/*" data-i="${i}" onchange="onUpload(event)">
+      </div>
+      <div class="a-card-body">
+        <div class="a-slot-num">Slot ${String(i+1).padStart(2,'0')}</div>
+        <input class="a-field ttl" type="text" value="${item.title}" placeholder="Title…" data-i="${i}" data-f="title" oninput="onField(this)">
+        <input class="a-field tg"  type="text" value="${item.tag}"   placeholder="Style · Placement" data-i="${i}" data-f="tag" oninput="onField(this)">
+        <div class="a-card-actions">
+          <span class="drag-handle" title="Drag to reorder">⠿</span>
+          ${item.img ? `<button class="ca-btn" onclick="removeImg(${i})">Remove Image</button>` : ''}
+          <button class="ca-btn del" onclick="delSlot(${i})">Delete Slot</button>
+        </div>
+      </div>
+    `;
+
+    // Drag & drop
+    card.addEventListener('dragstart', e => {
+      dragIdx = i;
+      card.classList.add('dragging');
+      e.dataTransfer.effectAllowed = 'move';
+    });
+    card.addEventListener('dragend', () => card.classList.remove('dragging'));
+    card.addEventListener('dragover', e => { e.preventDefault(); card.classList.add('drag-over'); });
+    card.addEventListener('dragleave', () => card.classList.remove('drag-over'));
+    card.addEventListener('drop', e => {
+      e.preventDefault();
+      card.classList.remove('drag-over');
+      if (dragIdx !== null && dragIdx !== i) {
+        const [moved] = gallery.splice(dragIdx, 1);
+        gallery.splice(i, 0, moved);
+        mark();
+        buildGrid();
+        updateStats();
+      }
+    });
+
+    grid.appendChild(card);
+  });
+}
+
+function onUpload(e) {
+  const file = e.target.files[0];
+  if (!file) return;
+  const i = parseInt(e.target.dataset.i);
+  const reader = new FileReader();
+  reader.onload = ev => {
+    gallery[i].img = ev.target.result;
+    mark();
+    buildGrid();
+    updateStats();
+    showToast('Image uploaded — click Save & Publish to go live');
+  };
+  reader.readAsDataURL(file);
+}
+
+function onField(inp) {
+  gallery[parseInt(inp.dataset.i)][inp.dataset.f] = inp.value;
+  mark();
+}
+
+function removeImg(i) {
+  gallery[i].img = null;
+  mark();
+  buildGrid();
+  updateStats();
+  showToast('Image removed');
+}
+
+function delSlot(i) {
+  if (!confirm(`Delete slot "${gallery[i].title}"? This cannot be undone.`)) return;
+  gallery.splice(i, 1);
+  mark();
+  buildGrid();
+  updateStats();
+  showToast('Slot deleted');
+}
+
+function addSlot() {
+  gallery.push({ title: 'New Piece', tag: 'Style · Placement', img: null });
+  mark();
+  buildGrid();
+  updateStats();
+  document.getElementById('adminGrid').lastElementChild?.scrollIntoView({ behavior: 'smooth' });
+  showToast('Slot added');
+}
+
+function clearAllImages() {
+  if (!confirm('Remove all uploaded images? Titles and tags will be kept.')) return;
+  gallery.forEach(d => d.img = null);
+  mark();
+  buildGrid();
+  updateStats();
+  showToast('All images cleared');
+}
+
+function saveAll() {
+  // Flush any in-progress text edits
+  document.querySelectorAll('.a-field').forEach(inp => {
+    const i = parseInt(inp.dataset.i);
+    if (!isNaN(i)) gallery[i][inp.dataset.f] = inp.value;
+  });
+  persistGallery();
+  changes = 0;
+  updateStats();
+  showToast('Saved & published ✓  —  changes are live on portfolio.html');
+}
+
+function mark() {
+  changes++;
+  updateStats();
+}
+
+function updateStats() {
+  const filled = gallery.filter(d => d.img).length;
+  document.getElementById('statTotal').textContent   = gallery.length;
+  document.getElementById('statFilled').textContent  = filled;
+  document.getElementById('statEmpty').textContent   = gallery.length - filled;
+  document.getElementById('statUnsaved').textContent = changes;
+}
+
+// Search
+document.getElementById('searchInput').addEventListener('input', function() {
+  buildGrid(this.value.toLowerCase());
+});
+
+// ════════════════════════════════════
+// TOAST
+// ════════════════════════════════════
+function showToast(msg) {
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => el.classList.remove('show'), 2800);
+}
+</script>
+</body>
+</html>
